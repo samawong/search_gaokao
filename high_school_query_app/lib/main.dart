@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import '../utils/db_helper.dart';
 
+
 void main() {
+
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
   runApp(HighSchoolQueryApp());
@@ -71,7 +73,7 @@ class _StudentQueryScreenState extends State<StudentQueryScreen> {
         mainAxisAlignment: MainAxisAlignment.center, // 上下居中对齐
         crossAxisAlignment: CrossAxisAlignment.center, // 水平方向居中
         children: [
-          SizedBox(height: 200.0,),
+          SizedBox(height: 200.0),
           Text(
             '河南省普通高招录取学生信息查询',
             style: TextStyle(fontSize: 64.0, fontWeight: FontWeight.bold),
@@ -83,38 +85,57 @@ class _StudentQueryScreenState extends State<StudentQueryScreen> {
           SizedBox(height: 20.0), // 增加一些间距
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                labelText: '输入查询条件（姓名, 年份, 学校等）',
-                border: OutlineInputBorder(),
-              ),
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: TextField(
+                controller: _searchController,
+                style: TextStyle(fontSize: 30.0,),
+                decoration: InputDecoration(
+                  labelText: '输入查询条件（姓名, 年份, 学校等）',
+                  labelStyle: TextStyle(fontSize: 28.0,),
+                  border: OutlineInputBorder(),
+                ),
               onChanged: (value) {
                 _filterStudents(); // 实时搜索
               },
+              ),
             ),
+
           ),
           SizedBox(height: 20.0),
           Expanded(
-            child: ListView.builder(
-              itemCount: _students.length,
-              itemBuilder: (context, index) {
-                final student = _students[index];
-                return ListTile(
-                  title: Text(student['name']),
-                  subtitle: Text(
-                      '籍贯: ${student['nativePlace']}, 高考年份: ${student['examYear']}'),
-                  trailing: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text('录取学校: ${student['admittedUniversity']}'),
-                      Text('毕业高中: ${student['highSchool']}'),
-                    ],
-                  ),
-                );
-              },
+            child: Center(
+              child:SizedBox(
+                width: MediaQuery.of(context).size.width * 0.7,
+                height: 600.0,
+                child: ListView.builder(
+                itemCount: _students.length,
+                  itemBuilder: (context, index) {
+                    final student = _students[index];
+                    return Card(
+                      margin: EdgeInsets.symmetric(vertical: 8.0),
+                      child:Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child:Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children:[
+                            Text('姓名: ${student['name']}',style: TextStyle(fontSize: 35.0,),),
+                            SizedBox(height: 8.0),
+                            Text('籍贯: ${student['nativePlace']}',style: TextStyle(fontSize: 35.0,),),
+                            Text('高考年份: ${student['examYear']}',style: TextStyle(fontSize: 35.0,),),
+                            Text('录取学校: ${student['admittedUniversity']}',style: TextStyle(fontSize: 35.0,),),
+                            Text('毕业高中: ${student['highSchool']}',style: TextStyle(fontSize: 35.0,),),
+                          ]
+                        )
+                      ),
+                      
+                    );
+                  },
+                ),
+              ),
             ),
           ),
+        
         ],
       ),
       
